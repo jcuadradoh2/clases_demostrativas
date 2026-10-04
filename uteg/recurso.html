@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Laboratorio BPMN · Caso: aprobación de un crédito · UTEG</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔷</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  /* ============ CONFIGURACIÓN ============
+     Enlace de votación de Mentimeter (ej. https://www.menti.com/al1b2c3d4e). Vacío = https://www.menti.com */
+  const MENTI_URL = "https://www.menti.com/aljx6iu2aqjx";
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --azul:#00538A; --azul-osc:#0B3352; --oro:#B78400; --oro-claro:#F2D27A;
+  --tinta:#1F2B36; --gris:#556574; --linea:#D8E1EA; --fondo:#F4F7FA; --panel:#FFFFFF;
+  --ok:#2E7D32; --mal:#C62828; --sombra:0 1px 2px rgba(11,51,82,.06),0 6px 20px rgba(11,51,82,.08); --radio:14px;
+  --lienzo:#FFFFFF;
+}
+:root.alto-contraste{ --tinta:#000; --gris:#1a1a1a; --linea:#000; --fondo:#fff; --azul:#003A63; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]):not(.alto-contraste){ --tinta:#E6EDF3; --gris:#A9B7C4; --linea:#2B3B4A; --fondo:#0E1620; --panel:#16212D; --azul:#5EA9E0; }
+}
+:root[data-theme="dark"]{ --tinta:#E6EDF3; --gris:#A9B7C4; --linea:#2B3B4A; --fondo:#0E1620; --panel:#16212D; --azul:#5EA9E0; }
+*{box-sizing:border-box}
+html{font-size:calc(16px * var(--escala,1))}
+body{margin:0;font-family:"Lexend",system-ui,"Segoe UI",Arial,sans-serif;color:var(--tinta);background:var(--fondo);line-height:1.55;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.barra{background:var(--azul-osc);color:#fff;border-bottom:4px solid var(--oro)}
+.barra .in{max-width:1280px;margin:0 auto;padding:.7rem 1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:.7rem;font-weight:600}
+.marca .escudo{width:38px;height:38px;border-radius:10px;background:var(--oro);display:grid;place-items:center;color:var(--azul-osc);font-weight:700}
+.marca small{display:block;font-weight:300;opacity:.85;font-size:.78rem}
+.acc{margin-left:auto;display:flex;gap:.4rem;flex-wrap:wrap}
+.acc button,.acc a{font:inherit;font-size:.82rem;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);border-radius:8px;padding:.35rem .6rem;cursor:pointer;text-decoration:none}
+.acc .volver{background:var(--oro);border-color:var(--oro)}
+.acc button:focus-visible,.acc a:focus-visible{outline:2px solid var(--oro-claro);outline-offset:1px}
+main{max-width:1280px;margin:0 auto;padding:1rem 1.25rem 3rem}
+h1{font-size:clamp(1.45rem,2.5vw,2rem);line-height:1.2;margin:.6rem 0 .2rem;font-weight:600}
+.sub{color:var(--gris);margin:0 0 1rem;max-width:72ch}
+.pestanas{display:flex;gap:.3rem;border-bottom:1px solid var(--linea);margin-bottom:1rem;overflow-x:auto}
+.pestanas button{font:inherit;background:none;border:0;border-bottom:3px solid transparent;padding:.65rem .9rem;color:var(--gris);cursor:pointer;white-space:nowrap}
+.pestanas button[aria-selected="true"]{color:var(--tinta);border-bottom-color:var(--oro);font-weight:600}
+.pestanas button:focus-visible{outline:3px solid var(--oro);outline-offset:-3px}
+.tarjeta{background:var(--panel);border:1px solid var(--linea);border-radius:var(--radio);box-shadow:var(--sombra)}
+.btn{font:inherit;font-size:.9rem;display:inline-flex;align-items:center;gap:.4rem;border-radius:10px;border:1px solid var(--linea);background:var(--panel);color:var(--tinta);padding:.5rem .85rem;cursor:pointer;text-decoration:none;min-height:40px}
+.btn:hover{border-color:var(--azul)}
+.btn:focus-visible{outline:3px solid var(--oro);outline-offset:2px}
+.btn.prim{background:var(--azul);border-color:var(--azul);color:#fff}
+.btn.oro{background:var(--oro);border-color:var(--oro);color:#fff}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+[hidden]{display:none!important}
+/* Explorar */
+.explorar{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:1rem}
+@media (max-width:1000px){.explorar{grid-template-columns:1fr}}
+.diagrama{overflow:hidden;align-self:start}
+.marco{overflow-x:auto;background:var(--lienzo);border-radius:var(--radio) var(--radio) 0 0}
+.marco svg{display:block;min-width:820px;width:100%;height:auto}
+.diagrama:fullscreen{display:flex;flex-direction:column;background:#fff;border-radius:0}
+.diagrama:fullscreen .marco{flex:1;display:flex;align-items:center}
+.herr{display:flex;gap:.4rem;flex-wrap:wrap;padding:.6rem .75rem;border-top:1px solid var(--linea);align-items:center}
+.herr .esp{flex:1}
+.paso{font-size:.85rem;color:var(--gris);font-variant-numeric:tabular-nums}
+/* elementos BPMN */
+.el{cursor:pointer}
+.el:focus{outline:none}
+.el:focus-visible .forma,.el.sel .forma{stroke:#B78400!important;stroke-width:4!important;filter:drop-shadow(0 0 6px rgba(183,132,0,.55))}
+.el:hover .forma{filter:drop-shadow(0 0 4px rgba(0,83,138,.4))}
+.fl{fill:none;stroke:#333F48;stroke-width:2}
+.fl.activo{stroke:#B78400;stroke-width:4}
+.atenuado .el:not(.sel):not(.visto){opacity:.35}
+.atenuado .fl:not(.activo):not(.visto){opacity:.25}
+.txt{font-family:"Lexend",Arial,sans-serif;fill:#1F2B36;pointer-events:none}
+.ficha{padding:1.1rem 1.2rem;align-self:start;position:sticky;top:1rem}
+.ficha .tipo{display:inline-block;font-size:.78rem;padding:.15rem .55rem;border-radius:999px;background:#EAF2FB;color:#00538A;margin-bottom:.4rem}
+.ficha h2{margin:.1rem 0 .4rem;font-size:1.2rem}
+.ficha p{margin:.3rem 0;color:var(--tinta)}
+.ficha .quien{font-size:.88rem;color:var(--gris)}
+.ficha .simbolo{width:100%;max-width:120px;height:70px;margin:.4rem 0}
+.leyenda{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.5rem;margin-top:1rem}
+.leyenda div{display:flex;align-items:center;gap:.5rem;font-size:.85rem;color:var(--gris)}
+.leyenda svg{width:42px;height:32px;flex:none}
+/* Reto */
+.reto{max-width:760px;padding:1.4rem}
+.reto h2{margin:0 0 .3rem;font-size:1.25rem}
+.opciones{display:grid;gap:.5rem;margin:1rem 0}
+.opciones button{font:inherit;text-align:left;padding:.75rem 1rem;border-radius:12px;border:2px solid var(--linea);background:var(--panel);color:var(--tinta);cursor:pointer;display:flex;gap:.7rem;align-items:center}
+.opciones button b{width:1.8rem;height:1.8rem;border-radius:50%;background:var(--fondo);display:grid;place-items:center;flex:none}
+.opciones button:hover:not([disabled]){border-color:var(--azul)}
+.opciones button.ok{border-color:var(--ok);background:rgba(46,125,50,.08)}
+.opciones button.mal{border-color:var(--mal);background:rgba(198,40,40,.07)}
+.retro{min-height:3rem;padding:.7rem 1rem;border-radius:10px;background:var(--fondo);margin-bottom:1rem}
+.marcador{color:var(--gris);font-size:.9rem}
+/* Mentimeter */
+.menti{display:grid;grid-template-columns:minmax(0,1fr) 260px;gap:1.5rem;padding:1.5rem;align-items:center}
+@media (max-width:760px){.menti{grid-template-columns:1fr}}
+.menti ol{padding-left:1.2rem}
+.menti li{margin:.35rem 0}
+.qr{background:#fff;padding:12px;border-radius:12px;justify-self:center;border:1px solid var(--linea)}
+.qr img,.qr canvas{display:block}
+.grande{font-size:2rem;font-weight:700;color:var(--azul);margin:.2rem 0}
+footer{text-align:center;color:var(--gris);font-size:.82rem;padding:1.5rem;border-top:1px solid var(--linea)}
+</style>
+</head>
+<body>
+<header class="barra">
+  <div class="in">
+    <div class="marca"><div class="escudo" aria-hidden="true">U</div><div>Laboratorio BPMN<small>Software de Procesos · UTEG</small></div></div>
+    <div class="acc" role="group" aria-label="Opciones">
+      <button id="aMenos" aria-label="Reducir tamaño de letra">A−</button>
+      <button id="aMas" aria-label="Aumentar tamaño de letra">A+</button>
+      <button id="contraste" aria-pressed="false">Alto contraste</button>
+      <button id="tema" aria-label="Cambiar tema claro u oscuro">Tema</button>
+      <a class="volver" href="index.html">← Volver a la presentación</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <h1>Caso práctico: aprobación de un crédito</h1>
+  <p class="sub">Toque o seleccione con el teclado (Tab y Enter) cualquier elemento del diagrama para ver qué es, quién lo realiza y qué significa. Use «Recorrido guiado» para seguir el proceso paso a paso.</p>
+
+  <div class="pestanas" role="tablist" aria-label="Secciones del laboratorio">
+    <button role="tab" aria-selected="true" aria-controls="p-explorar" id="t-explorar">Explorar el diagrama</button>
+    <button role="tab" aria-selected="false" aria-controls="p-reto" id="t-reto" tabindex="-1">Reto de práctica</button>
+    <button role="tab" aria-selected="false" aria-controls="p-menti" id="t-menti" tabindex="-1">Evaluación en vivo</button>
+  </div>
+
+  <!-- ===== EXPLORAR ===== -->
+  <section id="p-explorar" role="tabpanel" aria-labelledby="t-explorar">
+    <div class="explorar">
+      <div class="tarjeta diagrama" id="diagrama">
+        <div class="marco">
+          <svg id="svg" viewBox="50 120 1240 540" role="group" aria-label="Diagrama BPMN del proceso de aprobación de crédito en una cooperativa">
+            <defs>
+              <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333F48"/></marker>
+              <marker id="flechaOro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#B78400"/></marker>
+            </defs>
+            <!-- Pool y lanes -->
+            <rect x="60" y="130" width="1220" height="516" fill="#fff" stroke="#7A8C9C" stroke-width="1.5"/>
+            <rect x="60" y="130" width="42" height="516" fill="#DCE6F0" stroke="#7A8C9C" stroke-width="1.5"/>
+            <text class="txt" transform="translate(86 388) rotate(-90)" text-anchor="middle" font-size="15" font-weight="600">Cooperativa de Ahorro y Crédito</text>
+            <g id="lanes"></g>
+            <g id="flujos"></g>
+            <g id="elementos"></g>
+          </svg>
+        </div>
+        <div class="herr">
+          <button class="btn oro" id="btnTour">▶ Recorrido guiado</button>
+          <button class="btn" id="btnAnt" disabled aria-label="Paso anterior">◀</button>
+          <span class="paso" id="paso" aria-live="polite"></span>
+          <button class="btn" id="btnSig" disabled aria-label="Paso siguiente">▶</button>
+          <span class="esp"></span>
+          <button class="btn" id="btnFs">⛶ Pantalla completa</button>
+        </div>
+      </div>
+
+      <div class="tarjeta ficha" id="ficha" aria-live="polite">
+        <span class="tipo" id="fTipo">Cómo usar</span>
+        <h2 id="fNombre">Seleccione un elemento</h2>
+        <svg class="simbolo" id="fSimbolo" viewBox="0 0 120 70" aria-hidden="true"></svg>
+        <p id="fTexto">Cada forma tiene un significado: círculos para eventos, rectángulos para tareas y rombos para compuertas. Los carriles indican quién hace cada tarea.</p>
+        <p class="quien" id="fQuien"></p>
+        <button class="btn" id="btnVoz">🔊 Escuchar</button>
+        <div class="leyenda" aria-label="Leyenda de símbolos">
+          <div><svg viewBox="0 0 42 32"><circle cx="21" cy="16" r="11" fill="#E6F4EA" stroke="#2E7D32" stroke-width="2"/></svg>Evento de inicio</div>
+          <div><svg viewBox="0 0 42 32"><circle cx="21" cy="16" r="11" fill="#FDECEA" stroke="#C62828" stroke-width="4"/></svg>Evento de fin</div>
+          <div><svg viewBox="0 0 42 32"><rect x="3" y="6" width="36" height="20" rx="5" fill="#EAF2FB" stroke="#2F5C8A" stroke-width="2"/></svg>Tarea</div>
+          <div><svg viewBox="0 0 42 32"><path d="M21 3 L34 16 L21 29 L8 16 Z" fill="#FFF7D6" stroke="#C99400" stroke-width="2"/><path d="M16 11 L26 21 M26 11 L16 21" stroke="#1F2B36" stroke-width="2.5"/></svg>Compuerta exclusiva</div>
+          <div><svg viewBox="0 0 42 32"><path d="M21 3 L34 16 L21 29 L8 16 Z" fill="#FFF7D6" stroke="#C99400" stroke-width="2"/><path d="M21 9 V23 M14 16 H28" stroke="#1F2B36" stroke-width="3"/></svg>Compuerta paralela</div>
+          <div><svg viewBox="0 0 42 32"><path d="M2 16 H36" stroke="#333F48" stroke-width="2" marker-end="url(#flecha)"/></svg>Flujo de secuencia</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RETO ===== -->
+  <section id="p-reto" role="tabpanel" aria-labelledby="t-reto" hidden>
+    <div class="tarjeta reto">
+      <p class="marcador" id="rNum"></p>
+      <h2 id="rPregunta"></h2>
+      <div class="opciones" id="rOpciones"></div>
+      <div class="retro" id="rRetro" aria-live="polite">Elija una opción.</div>
+      <button class="btn prim" id="rSig" disabled>Siguiente pregunta</button>
+    </div>
+  </section>
+
+  <!-- ===== MENTIMETER ===== -->
+  <section id="p-menti" role="tabpanel" aria-labelledby="t-menti" hidden>
+    <div class="tarjeta menti">
+      <div>
+        <h2 style="margin:0 0 .4rem">Participa desde tu celular</h2>
+        <p class="grande">menti.com</p>
+        <ol>
+          <li>Abre <strong>menti.com</strong> en tu celular o escanea el código QR.</li>
+          <li>Escribe el código de 8 dígitos que aparece en la pantalla compartida por el docente.</li>
+          <li>Primero: nube de palabras (1 minuto). Luego: quiz de 3 preguntas (20 segundos cada una).</li>
+        </ol>
+        <p style="color:var(--gris)">Tus respuestas son anónimas. ¿Sin celular? Responde en el chat de Zoom con la letra de tu opción.</p>
+        <a class="btn prim" id="btnMenti" href="https://www.menti.com" target="_blank" rel="noopener">Abrir Mentimeter</a>
+      </div>
+      <div class="qr" id="qr" aria-label="Código QR para entrar a Mentimeter"></div>
+    </div>
+  </section>
+</main>
+<footer>UTEG · Software de Procesos · Recurso didáctico de la clase demostrativa</footer>
+
+<script>
+/* ---------- Modelo del diagrama ---------- */
+const LANES = [
+  {n:"Asesor de crédito", y:130}, {n:"Analista de riesgo", y:302}, {n:"Tesorería", y:474}
+];
+const E = {
+ inicio:{t:"start", cx:190, cy:216, nom:"Solicitud recibida", tipo:"Evento de inicio", lane:0,
+   txt:"Es el disparador del proceso: un socio entrega su solicitud de crédito. Se dibuja como un círculo de borde delgado."},
+ t1:{t:"task", x:225, y:175, nom:"Registrar solicitud y documentos", tipo:"Tarea", lane:0,
+   txt:"El asesor ingresa la solicitud en el sistema y revisa que estén cédula, roles de pago y demás documentos."},
+ t2:{t:"task", x:225, y:347, nom:"Evaluar historial crediticio", tipo:"Tarea", lane:1,
+   txt:"El analista consulta el buró de crédito y calcula la capacidad de pago. Observe que la tarea cambió de carril: cambió el responsable."},
+ g1:{t:"xor", cx:490, cy:388, nom:"¿Cumple requisitos?", tipo:"Compuerta exclusiva (X)", lane:1,
+   txt:"Aquí se toma una decisión con un solo resultado posible: o se rechaza o se aprueba, nunca ambos. Por eso es exclusiva."},
+ t3:{t:"task", x:415, y:175, nom:"Notificar rechazo", tipo:"Tarea", lane:0,
+   txt:"Camino del «No». El asesor informa al socio el motivo del rechazo."},
+ finR:{t:"end", cx:630, cy:216, nom:"Crédito rechazado", tipo:"Evento de fin", lane:0,
+   txt:"Un resultado final del proceso. Un diagrama puede tener varios eventos de fin, uno por cada resultado."},
+ g2:{t:"and", cx:710, cy:388, nom:"División paralela", tipo:"Compuerta paralela (+)", lane:1,
+   txt:"Camino del «Sí». La compuerta paralela abre dos caminos que se ejecutan al mismo tiempo: generar el contrato y notificar al socio."},
+ t5:{t:"task", x:770, y:175, nom:"Notificar aprobación al cliente", tipo:"Tarea", lane:0,
+   txt:"El asesor comunica la aprobación mientras, en paralelo, el analista prepara el contrato."},
+ t4:{t:"task", x:770, y:347, nom:"Generar contrato de crédito", tipo:"Tarea", lane:1,
+   txt:"El analista elabora el contrato con el monto, plazo y tasa aprobados."},
+ g3:{t:"and", cx:995, cy:388, nom:"Unión paralela", tipo:"Compuerta paralela (+)", lane:1,
+   txt:"Espera a que los dos caminos paralelos terminen antes de continuar. Sin esta unión, el desembolso podría ocurrir sin contrato."},
+ t6:{t:"task", x:1045, y:519, nom:"Desembolsar crédito", tipo:"Tarea", lane:2,
+   txt:"Tesorería acredita el dinero en la cuenta del socio. Es el tercer responsable del proceso."},
+ finOk:{t:"end", cx:1230, cy:560, nom:"Crédito desembolsado", tipo:"Evento de fin", lane:2,
+   txt:"El resultado exitoso del proceso: el socio recibe su crédito."}
+};
+const F = [ // [id, desde, hasta, puntos, etiqueta]
+ ["f1","inicio","t1","212.5,216 225,216"],
+ ["f2","t1","t2","300,257 300,347"],
+ ["f3","t2","g1","375,388 460,388"],
+ ["f4","g1","t3","490,358 490,257","No",498,320,"#C62828"],
+ ["f5","t3","finR","565,216 607.5,216"],
+ ["f6","g1","g2","520,388 680,388","Sí",530,376,"#2E7D32"],
+ ["f7","g2","t5","710,358 710,216 770,216"],
+ ["f8","g2","t4","740,388 770,388"],
+ ["f9","t4","g3","920,388 965,388"],
+ ["f10","t5","g3","920,216 995,216 995,358"],
+ ["f11","g3","t6","995,418 995,560 1045,560"],
+ ["f12","t6","finOk","1195,560 1207.5,560"]
+];
+const TOUR = [
+ ["inicio",[]],["t1",["f1"]],["t2",["f2"]],["g1",["f3"]],["t3",["f4"]],["finR",["f5"]],
+ ["g2",["f6"]],["t5",["f7"]],["t4",["f8"]],["g3",["f9","f10"]],["t6",["f11"]],["finOk",["f12"]]
+];
+
+const NS="http://www.w3.org/2000/svg";
+const mk=(tag,attrs,parent)=>{ const e=document.createElementNS(NS,tag); for(const k in attrs) e.setAttribute(k,attrs[k]); parent&&parent.appendChild(e); return e; };
+const svg=document.getElementById("svg");
+
+// lanes
+const gl=document.getElementById("lanes");
+LANES.forEach((l,i)=>{ mk("rect",{x:102,y:l.y,width:42,height:172,fill:"#EDF2F7",stroke:"#7A8C9C","stroke-width":1.2},gl);
+  if(i) mk("line",{x1:144,y1:l.y,x2:1280,y2:l.y,stroke:"#7A8C9C","stroke-width":1.2},gl);
+  const t=mk("text",{class:"txt",transform:`translate(128 ${l.y+86}) rotate(-90)`,"text-anchor":"middle","font-size":13,"font-weight":600},gl); t.textContent=l.n; });
+
+// flujos
+const gf=document.getElementById("flujos");
+F.forEach(f=>{ mk("polyline",{id:f[0],class:"fl",points:f[3],"marker-end":"url(#flecha)"},gf);
+  if(f[4]){ const t=mk("text",{class:"txt",x:f[5],y:f[6],"font-size":14,"font-weight":700,fill:f[7]},gf); t.style.fill=f[7]; t.textContent=f[4]; } });
+
+// texto multilínea en tareas
+function envolver(g,texto,cx,cy,ancho,fs){
+  const palabras=texto.split(" "), lineas=[]; let l="";
+  palabras.forEach(p=>{ const prueba=l?l+" "+p:p; if(prueba.length*fs*0.56>ancho && l){ lineas.push(l); l=p; } else l=prueba; }); lineas.push(l);
+  const t=mk("text",{class:"txt","text-anchor":"middle","font-size":fs},g);
+  lineas.forEach((ln,i)=>{ const ts=mk("tspan",{x:cx,y:cy+(i-(lineas.length-1)/2)*fs*1.2+fs*0.35},t); ts.textContent=ln; });
+}
+function dibujarForma(g,e,escala=1,ox=0,oy=0){
+  const s=escala;
+  if(e.t==="task"){ mk("rect",{class:"forma",x:ox+(e.x||0),y:oy+(e.y||0),width:150*s,height:82*s,rx:10*s,fill:"#EAF2FB",stroke:"#2F5C8A","stroke-width":1.8},g); }
+  else if(e.t==="start"){ mk("circle",{class:"forma",cx:ox+(e.cx||0),cy:oy+(e.cy||0),r:22.5*s,fill:"#E6F4EA",stroke:"#2E7D32","stroke-width":2},g); }
+  else if(e.t==="end"){ mk("circle",{class:"forma",cx:ox+(e.cx||0),cy:oy+(e.cy||0),r:22.5*s,fill:"#FDECEA",stroke:"#C62828","stroke-width":5},g); }
+  else { const cx=ox+(e.cx||0), cy=oy+(e.cy||0), d=30*s;
+    mk("path",{class:"forma",d:`M${cx} ${cy-d} L${cx+d} ${cy} L${cx} ${cy+d} L${cx-d} ${cy} Z`,fill:"#FFF7D6",stroke:"#C99400","stroke-width":2},g);
+    if(e.t==="xor") mk("path",{d:`M${cx-9*s} ${cy-9*s} L${cx+9*s} ${cy+9*s} M${cx+9*s} ${cy-9*s} L${cx-9*s} ${cy+9*s}`,stroke:"#1F2B36","stroke-width":3.5,"pointer-events":"none"},g);
+    else mk("path",{d:`M${cx} ${cy-13*s} V${cy+13*s} M${cx-13*s} ${cy} H${cx+13*s}`,stroke:"#1F2B36","stroke-width":4,"pointer-events":"none"},g); }
+}
+const ge=document.getElementById("elementos");
+Object.entries(E).forEach(([id,e])=>{
+  const g=mk("g",{id:"el-"+id,class:"el",tabindex:0,role:"button","aria-label":`${e.tipo}: ${e.nom}`},ge);
+  dibujarForma(g,e);
+  if(e.t==="task") envolver(g,e.nom,e.x+75,e.y+41,132,14);
+  else if(e.t==="xor"){ const t=mk("text",{class:"txt",x:e.cx,y:e.cy+50,"text-anchor":"middle","font-size":13},g); t.textContent=e.nom; }
+  else if(e.t==="start"||e.t==="end"){ envolver(g,e.nom,e.cx,e.cy+44,100,12); }
+  g.addEventListener("click",()=>{ detenerTour(); seleccionar(id); });
+  g.addEventListener("keydown",ev=>{ if(ev.key==="Enter"||ev.key===" "){ ev.preventDefault(); detenerTour(); seleccionar(id); } });
+});
+
+/* ---------- Ficha ---------- */
+const $=s=>document.querySelector(s);
+let actual=null;
+function seleccionar(id, flujos=[]){
+  actual=id; const e=E[id];
+  document.querySelectorAll(".el").forEach(n=>n.classList.toggle("sel", n.id==="el-"+id));
+  document.querySelectorAll(".fl").forEach(n=>{ const on=flujos.includes(n.id); n.classList.toggle("activo",on); n.setAttribute("marker-end", on?"url(#flechaOro)":"url(#flecha)"); });
+  $("#fTipo").textContent=e.tipo; $("#fNombre").textContent=e.nom; $("#fTexto").textContent=e.txt;
+  $("#fQuien").textContent="Responsable: "+LANES[e.lane].n;
+  const s=$("#fSimbolo"); s.innerHTML="";
+  const copia={...e}; if(e.t==="task"){copia.x=0;copia.y=0;} else {copia.cx=0;copia.cy=0;}
+  if(e.t==="task") dibujarForma(s,copia,.66,10,8); else dibujarForma(s,copia,1.05,60,35);
+}
+
+/* ---------- Recorrido guiado ---------- */
+let paso=-1;
+function mostrarPaso(){
+  const [id,fl]=TOUR[paso];
+  document.getElementById("diagrama").classList.add("atenuado");
+  TOUR.slice(0,paso).forEach(([pid,pfl])=>{ document.getElementById("el-"+pid).classList.add("visto"); pfl.forEach(f=>document.getElementById(f).classList.add("visto")); });
+  TOUR.slice(paso).forEach(([pid,pfl])=>{ document.getElementById("el-"+pid).classList.remove("visto"); pfl.forEach(f=>document.getElementById(f).classList.remove("visto")); });
+  seleccionar(id,fl);
+  $("#paso").textContent=`Paso ${paso+1} de ${TOUR.length}`;
+  $("#btnAnt").disabled=paso===0; $("#btnSig").disabled=paso===TOUR.length-1;
+  if(vozActiva) hablar();
+}
+function detenerTour(){ if(paso<0) return; paso=-1; document.getElementById("diagrama").classList.remove("atenuado"); document.querySelectorAll(".visto").forEach(n=>n.classList.remove("visto")); $("#paso").textContent=""; $("#btnAnt").disabled=$("#btnSig").disabled=true; $("#btnTour").textContent="▶ Recorrido guiado"; }
+$("#btnTour").onclick=()=>{ if(paso>=0){ detenerTour(); return; } paso=0; $("#btnTour").textContent="■ Terminar recorrido"; mostrarPaso(); };
+$("#btnSig").onclick=()=>{ if(paso<TOUR.length-1){ paso++; mostrarPaso(); } };
+$("#btnAnt").onclick=()=>{ if(paso>0){ paso--; mostrarPaso(); } };
+document.addEventListener("keydown",e=>{ if(paso<0 || $("#p-explorar").hidden) return; if(e.key==="ArrowRight"){e.preventDefault();$("#btnSig").click();} if(e.key==="ArrowLeft"){e.preventDefault();$("#btnAnt").click();} });
+
+/* ---------- Voz (DUA: representación auditiva) ---------- */
+let vozActiva=false;
+function hablar(){
+  if(!("speechSynthesis" in window)) { $("#btnVoz").disabled=true; return; }
+  speechSynthesis.cancel();
+  const texto = actual ? `${E[actual].tipo}. ${E[actual].nom}. ${E[actual].txt} ${$("#fQuien").textContent}.` : $("#fTexto").textContent;
+  const u=new SpeechSynthesisUtterance(texto); u.lang="es-ES"; u.rate=.97;
+  const voces=speechSynthesis.getVoices().filter(v=>v.lang&&v.lang.startsWith("es")); if(voces.length) u.voice=voces.find(v=>/419|MX|US|EC/.test(v.lang))||voces[0];
+  speechSynthesis.speak(u);
+}
+if(!("speechSynthesis" in window)) $("#btnVoz").hidden=true;
+$("#btnVoz").onclick=()=>{ vozActiva=true; hablar(); };
+
+/* ---------- Pantalla completa del diagrama ---------- */
+const dg=document.getElementById("diagrama");
+$("#btnFs").onclick=()=>{ if(document.fullscreenElement) document.exitFullscreen(); else if(dg.requestFullscreen) dg.requestFullscreen(); else if(dg.webkitRequestFullscreen) dg.webkitRequestFullscreen(); };
+document.addEventListener("fullscreenchange",()=>{ $("#btnFs").textContent=document.fullscreenElement?"✕ Salir":"⛶ Pantalla completa"; });
+if(!(document.fullscreenEnabled||document.webkitFullscreenEnabled)) $("#btnFs").hidden=true;
+
+/* ---------- Reto ---------- */
+const PREGUNTAS=[
+ {p:"¿Qué símbolo usas para una decisión donde solo se puede seguir UN camino?", o:["Compuerta exclusiva (X)","Compuerta paralela (+)","Evento intermedio","Lane"], c:0, r:"La X significa «o uno u otro». En el caso: ¿cumple requisitos? Sí o No."},
+ {p:"En el caso del crédito, «Asesor de crédito» y «Analista de riesgo» se dibujan como…", o:["Pools","Lanes (carriles)","Tareas","Eventos de fin"], c:1, r:"Son roles dentro de la misma organización (el pool de la cooperativa)."},
+ {p:"Aprobado el crédito, hay que generar el contrato Y notificar al cliente a la vez. ¿Qué compuerta usas?", o:["Exclusiva (X)","Paralela (+)","Inclusiva (O)","Ninguna"], c:1, r:"Paralela: todos los caminos se ejecutan al mismo tiempo."},
+ {p:"¿Cómo se distingue un evento de fin de un evento de inicio?", o:["Por su color verde","Por su borde grueso","Porque es un rombo","Porque tiene una X"], c:1, r:"El evento de fin tiene borde grueso; el de inicio, borde delgado."},
+ {p:"¿Qué organización mantiene el estándar BPMN 2.0?", o:["Object Management Group (OMG)","Microsoft","IEEE","W3C"], c:0, r:"El OMG publica BPMN; además es la norma ISO/IEC 19510."}
+];
+let q=0, puntos=0;
+function pintarPregunta(){
+  const P=PREGUNTAS[q]; $("#rNum").textContent=`Pregunta ${q+1} de ${PREGUNTAS.length} · Aciertos: ${puntos}`;
+  $("#rPregunta").textContent=P.p; $("#rRetro").textContent="Elija una opción."; $("#rSig").disabled=true;
+  const box=$("#rOpciones"); box.innerHTML="";
+  P.o.forEach((t,k)=>{ const b=document.createElement("button"); b.innerHTML=`<b>${"ABCD"[k]}</b><span>${t}</span>`;
+    b.onclick=()=>{ [...box.children].forEach((x,j)=>{ x.disabled=true; if(j===P.c) x.classList.add("ok"); });
+      if(k===P.c){ puntos++; $("#rRetro").innerHTML=`<strong style="color:var(--ok)">¡Correcto!</strong> ${P.r}`; }
+      else { b.classList.add("mal"); $("#rRetro").innerHTML=`<strong style="color:var(--mal)">Casi.</strong> ${P.r}`; }
+      $("#rNum").textContent=`Pregunta ${q+1} de ${PREGUNTAS.length} · Aciertos: ${puntos}`;
+      $("#rSig").disabled=false; $("#rSig").textContent = q===PREGUNTAS.length-1 ? "Ver resultado" : "Siguiente pregunta"; $("#rSig").focus(); };
+    box.appendChild(b); });
+}
+$("#rSig").onclick=()=>{ if(q<PREGUNTAS.length-1){ q++; pintarPregunta(); }
+  else { $("#rNum").textContent="Resultado"; $("#rPregunta").textContent=`Obtuviste ${puntos} de ${PREGUNTAS.length}.`; $("#rOpciones").innerHTML="";
+    $("#rRetro").textContent = puntos>=4 ? "¡Excelente! Ya lees diagramas BPMN con seguridad." : "Repasa el diagrama en «Explorar» y vuelve a intentarlo.";
+    $("#rSig").textContent="Reiniciar"; $("#rSig").onclick=()=>location.reload(); } };
+pintarPregunta();
+
+/* ---------- Mentimeter ---------- */
+const mentiHref = MENTI_URL && MENTI_URL.trim() ? MENTI_URL.trim() : "https://www.menti.com";
+$("#btnMenti").href=mentiHref;
+try{ new QRCode(document.getElementById("qr"),{text:mentiHref,width:220,height:220,colorDark:"#0B3352",colorLight:"#ffffff"}); }
+catch(e){ document.getElementById("qr").hidden=true; }
+
+/* ---------- Pestañas accesibles ---------- */
+const tabs=[...document.querySelectorAll('[role="tab"]')];
+function activar(t){ tabs.forEach(x=>{ const on=x===t; x.setAttribute("aria-selected",on); x.tabIndex=on?0:-1; document.getElementById(x.getAttribute("aria-controls")).hidden=!on; }); if(t.id!=="t-explorar") detenerTour(); }
+tabs.forEach((t,k)=>{ t.onclick=()=>activar(t); t.onkeydown=e=>{ if(e.key==="ArrowRight"||e.key==="ArrowLeft"){ const n=tabs[(k+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length]; n.focus(); activar(n);} }; });
+if(location.hash==="#reto") activar($("#t-reto")); if(location.hash==="#evaluacion") activar($("#t-menti"));
+
+/* ---------- Accesibilidad general ---------- */
+let escala=1; const root=document.documentElement;
+try{ escala=parseFloat(localStorage.getItem("uteg-escala"))||1; }catch(e){}
+const aplicarEscala=()=>{ root.style.setProperty("--escala",escala); try{localStorage.setItem("uteg-escala",escala);}catch(e){} };
+aplicarEscala();
+$("#aMas").onclick=()=>{ escala=Math.min(1.4,+(escala+.1).toFixed(2)); aplicarEscala(); };
+$("#aMenos").onclick=()=>{ escala=Math.max(.9,+(escala-.1).toFixed(2)); aplicarEscala(); };
+$("#contraste").onclick=function(){ const on=root.classList.toggle("alto-contraste"); this.setAttribute("aria-pressed",on); };
+$("#tema").onclick=()=>{ const oscuro = root.dataset.theme ? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches; root.dataset.theme = oscuro ? "light" : "dark"; };
+</script>
+</body>
+</html>

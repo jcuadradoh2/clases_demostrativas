@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Software de Procesos · BPMN 2.0 · Clase demostrativa UTEG</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔷</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ CONFIGURACIÓN ============
+   Pegue aquí el enlace de votación de Mentimeter (ej. https://www.menti.com/al1b2c3d4e).
+   Si queda vacío, el botón lleva a https://www.menti.com para ingresar el código. */
+</style>
+<script>
+  const MENTI_URL = "https://www.menti.com/aljx6iu2aqjx";
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<style>
+:root{
+  --azul:#00538A; --azul-osc:#0B3352; --oro:#B78400; --oro-claro:#F2D27A;
+  --tinta:#1F2B36; --gris:#556574; --linea:#D8E1EA; --fondo:#F4F7FA; --panel:#FFFFFF;
+  --sombra:0 1px 2px rgba(11,51,82,.06),0 6px 20px rgba(11,51,82,.08);
+  --radio:14px; --fs:1rem;
+}
+:root.alto-contraste{ --tinta:#000; --gris:#1a1a1a; --linea:#000; --fondo:#fff; --azul:#003A63; }
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]):not(.alto-contraste){ --tinta:#E6EDF3; --gris:#A9B7C4; --linea:#2B3B4A; --fondo:#0E1620; --panel:#16212D; --azul:#5EA9E0; }
+}
+:root[data-theme="dark"]{ --tinta:#E6EDF3; --gris:#A9B7C4; --linea:#2B3B4A; --fondo:#0E1620; --panel:#16212D; --azul:#5EA9E0; }
+*{box-sizing:border-box}
+html{font-size:calc(16px * var(--escala,1)); scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:"Lexend",system-ui,"Segoe UI",Arial,sans-serif;color:var(--tinta);background:var(--fondo);line-height:1.55;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+a{color:var(--azul)}
+.salto{position:absolute;left:-999px;top:0;background:var(--oro);color:#000;padding:.5rem 1rem;z-index:99}
+.salto:focus{left:1rem}
+/* Barra superior estilo campus virtual */
+.barra{background:var(--azul-osc);color:#fff;border-bottom:4px solid var(--oro)}
+.barra .in{max-width:1240px;margin:0 auto;padding:.7rem 1.25rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.marca{display:flex;align-items:center;gap:.7rem;font-weight:600;letter-spacing:.02em}
+.marca .escudo{width:38px;height:38px;border-radius:10px;background:var(--oro);display:grid;place-items:center;color:var(--azul-osc);font-weight:700}
+.marca small{display:block;font-weight:300;opacity:.85;font-size:.78rem}
+.acc{margin-left:auto;display:flex;gap:.4rem;flex-wrap:wrap}
+.acc button{font:inherit;font-size:.82rem;background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45);border-radius:8px;padding:.35rem .6rem;cursor:pointer}
+.acc button:hover,.acc button:focus-visible{background:rgba(255,255,255,.12);outline:2px solid var(--oro-claro);outline-offset:1px}
+.migas{max-width:1240px;margin:0 auto;padding:.8rem 1.25rem 0;font-size:.85rem;color:var(--gris)}
+.migas a{color:var(--gris)}
+main{max-width:1240px;margin:0 auto;padding:1rem 1.25rem 3rem;display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:1.5rem}
+@media (max-width:980px){main{grid-template-columns:1fr}}
+h1{font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.2;margin:.4rem 0 .3rem;font-weight:600;color:var(--tinta)}
+.sub{color:var(--gris);margin:0 0 1.2rem;max-width:70ch}
+.tarjeta{background:var(--panel);border:1px solid var(--linea);border-radius:var(--radio);box-shadow:var(--sombra)}
+/* ===== Visor ===== */
+.visor{position:relative;overflow:hidden}
+.visor .lienzo{position:relative;aspect-ratio:16/9;background:#fff;border-radius:var(--radio) var(--radio) 0 0;overflow:hidden}
+.visor img{width:100%;height:100%;object-fit:contain;display:block;user-select:none}
+.toolbar{display:flex;align-items:center;gap:.4rem;padding:.6rem .75rem;border-top:1px solid var(--linea);flex-wrap:wrap}
+.btn{font:inherit;font-size:.9rem;display:inline-flex;align-items:center;gap:.4rem;border-radius:10px;border:1px solid var(--linea);background:var(--panel);color:var(--tinta);padding:.5rem .8rem;cursor:pointer;text-decoration:none;min-height:40px}
+.btn:hover{border-color:var(--azul)}
+.btn:focus-visible{outline:3px solid var(--oro);outline-offset:2px}
+.btn.prim{background:var(--azul);border-color:var(--azul);color:#fff}
+.btn.oro{background:var(--oro);border-color:var(--oro);color:#fff}
+.btn svg{width:18px;height:18px;flex:none}
+.contador{font-variant-numeric:tabular-nums;color:var(--gris);font-size:.9rem;min-width:4.5rem;text-align:center}
+.esp{flex:1}
+.progreso{height:4px;background:var(--linea)}
+.progreso i{display:block;height:100%;background:var(--oro);width:0;transition:width .25s}
+.aviso{position:absolute;right:1.2rem;bottom:14%;display:none}
+.aviso.on{display:block}
+.aviso a{box-shadow:0 6px 18px rgba(0,0,0,.25)}
+/* Pantalla completa (estilo Moodle: Esc vuelve a la página) */
+.visor:fullscreen{background:#0B1118;display:flex;flex-direction:column;border-radius:0;border:0}
+.visor:fullscreen .lienzo{flex:1;aspect-ratio:auto;border-radius:0;background:#0B1118}
+.visor:fullscreen .toolbar{background:#111A24;border-top-color:#22303d}
+.visor:fullscreen .btn{background:#1A2532;color:#E6EDF3;border-color:#2E3E4F}
+.visor:fullscreen .btn.prim{background:var(--azul);color:#fff}
+.visor:fullscreen .btn.oro{background:var(--oro);color:#fff}
+.visor:fullscreen .contador{color:#A9B7C4}
+.visor.pseudo-fs{position:fixed;inset:0;z-index:50;border-radius:0;display:flex;flex-direction:column;background:#0B1118}
+.visor.pseudo-fs .lienzo{flex:1;aspect-ratio:auto;border-radius:0;background:#0B1118}
+.miniaturas{display:flex;gap:.5rem;overflow-x:auto;padding:.75rem;border-top:1px solid var(--linea)}
+.miniaturas button{flex:none;width:120px;border:2px solid transparent;border-radius:8px;padding:0;background:none;cursor:pointer;overflow:hidden}
+.miniaturas button[aria-current="true"]{border-color:var(--oro)}
+.miniaturas img{width:100%;display:block;aspect-ratio:16/9;object-fit:cover}
+.visor:fullscreen .miniaturas,.visor.pseudo-fs .miniaturas{display:none}
+.visor .lienzo{container-type:size}
+.capaQr{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100cqw,100cqh*16/9);aspect-ratio:16/9;pointer-events:none;display:none}
+.capaQr.on{display:block}
+.capaQr a{position:absolute;left:20.5%;top:23.3%;width:9.5%;aspect-ratio:1;background:#fff;border-radius:6%;padding:.6%;box-sizing:border-box;pointer-events:auto}
+.capaQr img,.capaQr canvas{width:100%!important;height:100%!important;display:block}
+#pizarra{position:absolute;inset:0;width:100%;height:100%;display:none;touch-action:none;pointer-events:none}
+.visor:fullscreen #pizarra,.visor.pseudo-fs #pizarra{display:block}
+.visor.dibujando #pizarra{pointer-events:auto;cursor:crosshair}
+.lapiz{display:none;align-items:center;gap:.35rem}
+.visor:fullscreen .lapiz,.visor.pseudo-fs .lapiz{display:inline-flex}
+.lapiz .col{width:26px;height:26px;border-radius:50%;border:2px solid #2E3E4F;cursor:pointer;padding:0}
+.lapiz .col[aria-pressed="true"]{outline:3px solid #fff;outline-offset:1px}
+.lapiz input[type=color]{width:32px;height:32px;border:0;background:none;padding:0;cursor:pointer}
+.visor.dibujando #btnLapiz{background:var(--oro);color:#fff}
+.transcripcion{padding:1rem 1.2rem;border-top:1px solid var(--linea);display:none}
+.transcripcion.on{display:block}
+.transcripcion h3{margin:0 0 .3rem;font-size:1rem}
+.transcripcion p{margin:0;color:var(--gris);max-width:75ch}
+/* Lateral */
+aside .tarjeta{padding:1.1rem 1.2rem;margin-bottom:1rem}
+aside h2{font-size:1.02rem;margin:0 0 .6rem;font-weight:600}
+.dato{display:flex;justify-content:space-between;gap:1rem;font-size:.9rem;padding:.35rem 0;border-bottom:1px dashed var(--linea)}
+.dato:last-child{border-bottom:0}
+.dato span:first-child{color:var(--gris)}
+.recurso{display:block;padding:1.1rem 1.2rem;text-decoration:none;color:inherit;border-left:0}
+.recurso strong{display:block;font-size:1.02rem;margin-bottom:.2rem;color:var(--azul)}
+.recurso p{margin:0;font-size:.9rem;color:var(--gris)}
+.recurso:hover{border-color:var(--azul)}
+.descargas{display:flex;gap:.5rem;flex-wrap:wrap}
+footer{text-align:center;color:var(--gris);font-size:.82rem;padding:1.5rem;border-top:1px solid var(--linea)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<a class="salto" href="#visor">Saltar a la presentación</a>
+<header class="barra">
+  <div class="in">
+    <div class="marca"><div class="escudo" aria-hidden="true">U</div><div>UTEG · Aula virtual<small>Universidad Tecnológica Empresarial de Guayaquil</small></div></div>
+    <div class="acc" role="group" aria-label="Opciones de accesibilidad">
+      <button id="aMenos" aria-label="Reducir tamaño de letra">A−</button>
+      <button id="aMas" aria-label="Aumentar tamaño de letra">A+</button>
+      <button id="contraste" aria-pressed="false">Alto contraste</button>
+      <button id="tema" aria-label="Cambiar entre tema claro y oscuro">Tema</button>
+    </div>
+  </div>
+</header>
+<nav class="migas" aria-label="Ruta"><a href="#">Software de Procesos</a> › Unidad 2 › Clase demostrativa</nav>
+
+<main>
+  <section aria-labelledby="titulo">
+    <h1 id="titulo">Modelado de procesos con notación BPMN 2.0</h1>
+    <p class="sub">Clase demostrativa · MSc. Jefferson Alejandro Cuadrado Hidalgo. Use las flechas del teclado para avanzar y la tecla F para pantalla completa; Esc regresa a esta página.</p>
+
+    <div class="tarjeta visor" id="visor" tabindex="-1" aria-roledescription="presentación" aria-label="Visor de la presentación">
+      <div class="lienzo" id="lienzo">
+        <img id="lamina" src="slides/lamina-1.jpg" alt="">
+        <div class="capaQr" id="capaQr"><a id="qrMenti" target="_blank" rel="noopener" aria-label="Código QR de Mentimeter"></a></div>
+        <canvas id="pizarra" aria-hidden="true"></canvas>
+        <div class="aviso" id="aviso"></div>
+      </div>
+      <div class="progreso" aria-hidden="true"><i id="barraProg"></i></div>
+      <div class="toolbar">
+        <button class="btn" id="ant" aria-label="Lámina anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <span class="contador" id="contador" aria-live="polite">1 / 13</span>
+        <button class="btn" id="sig" aria-label="Lámina siguiente"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg></button>
+        <span class="esp"></span>
+        <span class="lapiz" role="group" aria-label="Lápiz">
+          <button class="btn" id="btnLapiz" aria-pressed="false" title="Lápiz (P)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20l4-1 11-11-3-3L5 16z"/></svg>Lápiz</button>
+          <button class="col" style="background:#E53935" data-c="#E53935" aria-label="Rojo" aria-pressed="true"></button>
+          <button class="col" style="background:#FDD835" data-c="#FDD835" aria-label="Amarillo" aria-pressed="false"></button>
+          <button class="col" style="background:#43A047" data-c="#43A047" aria-label="Verde" aria-pressed="false"></button>
+          <button class="col" style="background:#1E88E5" data-c="#1E88E5" aria-label="Azul" aria-pressed="false"></button>
+          <button class="col" style="background:#111" data-c="#111111" aria-label="Negro" aria-pressed="false"></button>
+          <input type="color" id="colorLibre" value="#E53935" aria-label="Otro color">
+          <button class="btn" id="btnDeshacer" title="Deshacer (Ctrl+Z)" aria-label="Deshacer trazo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14L4 9l5-5"/><path d="M4 9h11a5 5 0 010 10h-4"/></svg></button>
+          <button class="btn" id="btnBorrar" title="Borrar todo (C)" aria-label="Borrar dibujos de la lámina"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg></button>
+        </span>
+        <button class="btn" id="btnTexto" aria-pressed="false" title="Mostrar el texto de la lámina">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>Texto</button>
+        <a class="btn oro" href="recurso.html" id="btnLab" title="Abrir el laboratorio interactivo BPMN">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="8" width="6" height="8" rx="1.5"/><rect x="15" y="8" width="6" height="8" rx="1.5"/><path d="M9 12h6"/></svg>Laboratorio BPMN</a>
+        <button class="btn prim" id="btnFs" aria-label="Ver en pantalla completa">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="icoFs"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span id="txtFs">Pantalla completa</span></button>
+      </div>
+      <div class="transcripcion" id="transcripcion" aria-live="polite"><h3 id="trTitulo"></h3><p id="trTexto"></p></div>
+      <nav class="miniaturas" id="miniaturas" aria-label="Miniaturas de las láminas"></nav>
+    </div>
+  </section>
+
+  <aside>
+    <a class="tarjeta recurso" href="recurso.html">
+      <strong>Recurso didáctico: Laboratorio BPMN</strong>
+      <p>Explore el diagrama del caso de crédito elemento por elemento, siga el recorrido guiado y practique el reto.</p>
+    </a>
+    <div class="tarjeta">
+      <h2>Evaluación en vivo</h2>
+      <p style="margin:0 0 .8rem;font-size:.9rem;color:var(--gris)">Nube de palabras y quiz de 3 preguntas. Participación anónima desde el celular.</p>
+      <a class="btn prim" id="btnMenti" href="https://www.menti.com" target="_blank" rel="noopener">Unirme en Mentimeter</a>
+    </div>
+    <div class="tarjeta">
+      <h2>Datos de la sesión</h2>
+      <div class="dato"><span>Asignatura</span><span>Software de Procesos</span></div>
+      <div class="dato"><span>Unidad</span><span>2 · BPMN 2.0</span></div>
+      <div class="dato"><span>Fecha</span><span>Lunes 05/10/2026</span></div>
+      <div class="dato"><span>Duración</span><span>15 min + 5 de preguntas</span></div>
+    </div>
+    <div class="tarjeta">
+      <h2>Descargas</h2>
+      <div class="descargas">
+        <a class="btn" href="Clase_BPMN_UTEG.pptx" download>Presentación .pptx</a>
+        <a class="btn" href="Clase_BPMN_UTEG.pdf" download>PDF</a>
+      </div>
+    </div>
+  </aside>
+</main>
+<footer>UTEG · Software de Procesos · Clase demostrativa 2026</footer>
+
+<script>
+const LAMINAS = [
+ {t:"Portada", m:"Software de Procesos. Unidad 2: Modelado de procesos con notación BPMN 2.0. Docente: MSc. Jefferson Alejandro Cuadrado Hidalgo."},
+ {t:"Presentación del aspirante", m:"Presentación del docente y ruta de la clase: objetivos, introducción, desarrollo, conclusión, evaluación en Mentimeter y fuentes."},
+ {t:"Objetivos", m:"Objetivo: modelar un proceso empresarial sencillo con BPMN 2.0. Logros: comprender qué es BPMN, identificar sus símbolos y aplicar la notación al caso de un crédito."},
+ {t:"Introducción", m:"BPMN es un lenguaje gráfico estándar para dibujar procesos. Es un estándar internacional (OMG, ISO/IEC 19510), sirve de puente entre negocio y tecnología y puede ejecutarse en un motor de procesos."},
+ {t:"Eventos y tareas", m:"Los eventos son círculos: inicio (borde delgado), intermedio (borde doble) y fin (borde grueso). Las tareas son rectángulos redondeados con verbo y objeto. Las flechas marcan el orden."},
+ {t:"Compuertas", m:"Las compuertas son rombos. Exclusiva (X): solo un camino. Paralela (+): todos los caminos a la vez. Inclusiva (O): uno o varios caminos según condiciones."},
+ {t:"Pools y lanes", m:"Un pool representa a un participante completo, como una empresa. Los lanes dividen el pool por roles o departamentos y muestran quién hace cada tarea."},
+ {t:"Herramientas de software", m:"Bizagi Modeler para analistas, Camunda para desarrolladores y Lucidchart o bpmn.io para colaborar en la web. Todas usan los mismos símbolos BPMN 2.0."},
+ {t:"Caso práctico: crédito", m:"Diagrama de una cooperativa con tres carriles: asesor de crédito, analista de riesgo y tesorería. Se registra la solicitud, se evalúa el historial y una compuerta exclusiva decide si se rechaza o se aprueba. Si se aprueba, una compuerta paralela genera el contrato y notifica al cliente a la vez; luego tesorería desembolsa.", lab:true},
+ {t:"Conclusión", m:"Pocos símbolos bastan para contar un proceso; pools y lanes muestran responsables; un buen diagrama es la base para documentar, mejorar y automatizar."},
+ {t:"Actividad de evaluación", m:"Ingrese a menti.com con el código en pantalla. Nube de palabras de un minuto y quiz de tres preguntas. Sin celular, responda en el chat de Zoom.", menti:true},
+ {t:"Fuentes bibliográficas", m:"Dumas y otros (2018); ISO/IEC 19510:2013; Object Management Group (2013); Silver (2011); Weske (2019)."},
+ {t:"Preguntas", m:"Ronda de preguntas y agradecimiento."}
+];
+
+const $ = s => document.querySelector(s);
+const visor=$("#visor"), img=$("#lamina"), cont=$("#contador"), barra=$("#barraProg"), aviso=$("#aviso");
+const mentiHref = MENTI_URL && MENTI_URL.trim() ? MENTI_URL.trim() : "https://www.menti.com";
+$("#btnMenti").href = mentiHref; $("#qrMenti").href = mentiHref;
+try{ new QRCode($("#qrMenti"),{text:mentiHref,width:512,height:512,colorDark:"#0B3352",colorLight:"#ffffff"}); }catch(e){}
+let i = 0;
+
+// precarga
+LAMINAS.forEach((_,k)=>{ const p=new Image(); p.src=`slides/lamina-${k+1}.jpg`; });
+// miniaturas
+const mini=$("#miniaturas");
+LAMINAS.forEach((l,k)=>{ const b=document.createElement("button"); b.innerHTML=`<img src="slides/lamina-${k+1}.jpg" alt="" loading="lazy">`; b.setAttribute("aria-label",`Ir a la lámina ${k+1}: ${l.t}`); b.onclick=()=>ir(k); mini.appendChild(b); });
+
+function ir(k){
+  i = Math.max(0, Math.min(LAMINAS.length-1, k));
+  const l = LAMINAS[i];
+  img.src = `slides/lamina-${i+1}.jpg`;
+  img.alt = `Lámina ${i+1}: ${l.t}. ${l.m}`;
+  cont.textContent = `${i+1} / ${LAMINAS.length}`;
+  barra.style.width = ((i+1)/LAMINAS.length*100)+"%";
+  $("#trTitulo").textContent = `${i+1}. ${l.t}`; $("#trTexto").textContent = l.m;
+  [...mini.children].forEach((b,k)=>b.setAttribute("aria-current", k===i ? "true":"false"));
+  mini.children[i].scrollIntoView({block:"nearest",inline:"center"});
+  aviso.className="aviso"; aviso.innerHTML="";
+  if(l.lab){ aviso.innerHTML='<a class="btn oro" href="recurso.html">Abrir el diagrama interactivo</a>'; aviso.className="aviso on"; }
+  $("#capaQr").classList.toggle("on", !!l.menti);
+  if(l.menti){ aviso.innerHTML=`<a class="btn prim" href="${mentiHref}" target="_blank" rel="noopener">Abrir Mentimeter</a>`; aviso.className="aviso on"; }
+  try{ sessionStorage.setItem("uteg-bpmn-lamina", String(i)); }catch(e){}
+  if(typeof pintar==="function") pintar();
+}
+$("#ant").onclick=()=>ir(i-1); $("#sig").onclick=()=>ir(i+1);
+img.addEventListener("click",e=>{ const r=img.getBoundingClientRect(); ir(e.clientX-r.left < r.width/3 ? i-1 : i+1); });
+
+// Pantalla completa (API nativa; si no existe, por ejemplo en iPhone, se usa una capa a pantalla completa)
+const soportaFs = !!(document.fullscreenEnabled || document.webkitFullscreenEnabled);
+function enFs(){ return document.fullscreenElement===visor || document.webkitFullscreenElement===visor || visor.classList.contains("pseudo-fs"); }
+function alternarFs(){
+  if(enFs()){
+    if(visor.classList.contains("pseudo-fs")){ visor.classList.remove("pseudo-fs"); actualizarFs(); }
+    else (document.exitFullscreen||document.webkitExitFullscreen).call(document);
+  } else if(soportaFs){
+    (visor.requestFullscreen||visor.webkitRequestFullscreen).call(visor);
+  } else { visor.classList.add("pseudo-fs"); actualizarFs(); }
+}
+function actualizarFs(){ const on=enFs(); if(!on) dibujar(false); requestAnimationFrame(ajustarPizarra); $("#txtFs").textContent = on ? "Salir" : "Pantalla completa"; $("#btnFs").setAttribute("aria-label", on ? "Salir de pantalla completa" : "Ver en pantalla completa"); if(!on) visor.focus({preventScroll:true}); }
+$("#btnFs").onclick=alternarFs;
+document.addEventListener("fullscreenchange",actualizarFs); document.addEventListener("webkitfullscreenchange",actualizarFs);
+
+document.addEventListener("keydown",e=>{
+  if(["INPUT","TEXTAREA"].includes(document.activeElement.tagName)) return;
+  if(enFs()){
+    if((e.ctrlKey||e.metaKey)&&(e.key==="z"||e.key==="Z")){ e.preventDefault(); deshacer(); return; }
+    if(e.key==="p"||e.key==="P"){ dibujar(!visor.classList.contains("dibujando")); return; }
+    if(e.key==="c"||e.key==="C"){ borrar(); return; }
+  }
+  if(e.key==="ArrowRight"||e.key==="PageDown"||e.key===" "){ e.preventDefault(); ir(i+1); }
+  else if(e.key==="ArrowLeft"||e.key==="PageUp"){ e.preventDefault(); ir(i-1); }
+  else if(e.key==="Home") ir(0); else if(e.key==="End") ir(LAMINAS.length-1);
+  else if(e.key==="f"||e.key==="F") alternarFs();
+  else if(e.key==="Escape" && visor.classList.contains("pseudo-fs")){ visor.classList.remove("pseudo-fs"); actualizarFs(); }
+});
+// deslizar en pantallas táctiles
+let x0=null; img.addEventListener("touchstart",e=>x0=e.touches[0].clientX,{passive:true});
+img.addEventListener("touchend",e=>{ if(x0===null) return; const dx=e.changedTouches[0].clientX-x0; if(Math.abs(dx)>40) ir(dx<0?i+1:i-1); x0=null; });
+
+// Lápiz sobre la lámina (solo en pantalla completa); trazos por lámina, en coordenadas relativas
+const piz=$("#pizarra"), ctx=piz.getContext("2d"), trazos={};
+let color="#E53935", actual=null;
+function ajustarPizarra(){ const r=piz.getBoundingClientRect(), d=devicePixelRatio||1; if(!r.width) return; piz.width=r.width*d; piz.height=r.height*d; pintar(); }
+function pintar(){
+  ctx.clearRect(0,0,piz.width,piz.height); ctx.lineCap=ctx.lineJoin="round";
+  (trazos[i]||[]).forEach(t=>{ ctx.strokeStyle=t.c; ctx.lineWidth=4*(devicePixelRatio||1); ctx.beginPath(); t.p.forEach(([x,y],k)=>ctx[k?"lineTo":"moveTo"](x*piz.width,y*piz.height)); if(t.p.length===1) ctx.lineTo(t.p[0][0]*piz.width+.1,t.p[0][1]*piz.height); ctx.stroke(); });
+}
+function punto(e){ const r=piz.getBoundingClientRect(); return [(e.clientX-r.left)/r.width,(e.clientY-r.top)/r.height]; }
+function dibujar(on){ visor.classList.toggle("dibujando",on); $("#btnLapiz").setAttribute("aria-pressed",on); }
+function deshacer(){ (trazos[i]||[]).pop(); pintar(); }
+function borrar(){ trazos[i]=[]; pintar(); }
+function elegir(c){ color=c; $("#colorLibre").value=c; document.querySelectorAll(".lapiz .col").forEach(b=>b.setAttribute("aria-pressed",b.dataset.c===c)); }
+piz.addEventListener("pointerdown",e=>{ piz.setPointerCapture(e.pointerId); actual={c:color,p:[punto(e)]}; (trazos[i]=trazos[i]||[]).push(actual); pintar(); });
+piz.addEventListener("pointermove",e=>{ if(!actual) return; actual.p.push(punto(e)); pintar(); });
+["pointerup","pointercancel"].forEach(t=>piz.addEventListener(t,()=>actual=null));
+$("#btnLapiz").onclick=()=>dibujar(!visor.classList.contains("dibujando"));
+$("#btnDeshacer").onclick=deshacer; $("#btnBorrar").onclick=borrar;
+document.querySelectorAll(".lapiz .col").forEach(b=>b.onclick=()=>{ elegir(b.dataset.c); dibujar(true); });
+$("#colorLibre").oninput=e=>{ elegir(e.target.value); dibujar(true); };
+new ResizeObserver(ajustarPizarra).observe(piz);
+
+// Texto de la lámina (DUA: representación alternativa)
+$("#btnTexto").onclick=function(){ const on=$("#transcripcion").classList.toggle("on"); this.setAttribute("aria-pressed",on); };
+
+// Accesibilidad: tamaño, contraste, tema
+let escala=1; const root=document.documentElement;
+try{ escala=parseFloat(localStorage.getItem("uteg-escala"))||1; }catch(e){}
+const aplicarEscala=()=>{ root.style.setProperty("--escala",escala); try{localStorage.setItem("uteg-escala",escala);}catch(e){} };
+aplicarEscala();
+$("#aMas").onclick=()=>{ escala=Math.min(1.4,+(escala+.1).toFixed(2)); aplicarEscala(); };
+$("#aMenos").onclick=()=>{ escala=Math.max(.9,+(escala-.1).toFixed(2)); aplicarEscala(); };
+$("#contraste").onclick=function(){ const on=root.classList.toggle("alto-contraste"); this.setAttribute("aria-pressed",on); };
+$("#tema").onclick=()=>{ const oscuro = root.dataset.theme ? root.dataset.theme==="dark" : matchMedia("(prefers-color-scheme: dark)").matches; root.dataset.theme = oscuro ? "light" : "dark"; };
+
+// Volver a la lámina en la que estaba (por ejemplo, al regresar del laboratorio)
+let guardada=0; try{ guardada=parseInt(sessionStorage.getItem("uteg-bpmn-lamina"))||0; }catch(e){}
+const pedida=parseInt(new URLSearchParams(location.search).get("lamina"));
+ir(Number.isFinite(pedida) ? pedida-1 : guardada);
+</script>
+</body>
+</html>

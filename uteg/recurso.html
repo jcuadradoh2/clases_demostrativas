@@ -13,7 +13,6 @@
      Enlace de votación de Mentimeter (ej. https://www.menti.com/al1b2c3d4e). Vacío = https://www.menti.com */
   const MENTI_URL = "https://www.menti.com/aljx6iu2aqjx";
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{
   --azul:#00538A; --azul-osc:#0B3352; --oro:#B78400; --oro-claro:#F2D27A;
@@ -203,7 +202,7 @@ footer{text-align:center;color:var(--gris);font-size:.82rem;padding:1.5rem;borde
         <p style="color:var(--gris)">Tus respuestas son anónimas. ¿Sin celular? Responde en el chat de Zoom con la letra de tu opción.</p>
         <a class="btn prim" id="btnMenti" href="https://www.menti.com" target="_blank" rel="noopener">Abrir Mentimeter</a>
       </div>
-      <div class="qr" id="qr" aria-label="Código QR para entrar a Mentimeter"></div>
+      <div class="qr" id="qr"><img src="qr.png" width="220" height="220" alt="Código QR para entrar a Mentimeter"></div>
     </div>
   </section>
 </main>
@@ -383,8 +382,6 @@ pintarPregunta();
 /* ---------- Mentimeter ---------- */
 const mentiHref = MENTI_URL && MENTI_URL.trim() ? MENTI_URL.trim() : "https://www.menti.com";
 $("#btnMenti").href=mentiHref;
-try{ new QRCode(document.getElementById("qr"),{text:mentiHref,width:220,height:220,colorDark:"#0B3352",colorLight:"#ffffff"}); }
-catch(e){ document.getElementById("qr").hidden=true; }
 
 /* ---------- Pestañas accesibles ---------- */
 const tabs=[...document.querySelectorAll('[role="tab"]')];

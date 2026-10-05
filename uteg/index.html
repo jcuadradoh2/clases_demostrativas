@@ -16,7 +16,6 @@
 <script>
   const MENTI_URL = "https://www.menti.com/aljx6iu2aqjx";
 </script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <style>
 :root{
   --azul:#00538A; --azul-osc:#0B3352; --oro:#B78400; --oro-claro:#F2D27A;
@@ -141,7 +140,7 @@ footer{text-align:center;color:var(--gris);font-size:.82rem;padding:1.5rem;borde
     <div class="tarjeta visor" id="visor" tabindex="-1" aria-roledescription="presentación" aria-label="Visor de la presentación">
       <div class="lienzo" id="lienzo">
         <img id="lamina" src="slides/lamina-1.jpg" alt="">
-        <div class="capaQr" id="capaQr"><a id="qrMenti" target="_blank" rel="noopener" aria-label="Código QR de Mentimeter"></a></div>
+        <div class="capaQr" id="capaQr"><a id="qrMenti" target="_blank" rel="noopener" aria-label="Código QR de Mentimeter"><img src="qr.png" alt="Código QR de Mentimeter"></a></div>
         <canvas id="pizarra" aria-hidden="true"></canvas>
         <div class="aviso" id="aviso"></div>
       </div>
@@ -223,7 +222,6 @@ const $ = s => document.querySelector(s);
 const visor=$("#visor"), img=$("#lamina"), cont=$("#contador"), barra=$("#barraProg"), aviso=$("#aviso");
 const mentiHref = MENTI_URL && MENTI_URL.trim() ? MENTI_URL.trim() : "https://www.menti.com";
 $("#btnMenti").href = mentiHref; $("#qrMenti").href = mentiHref;
-try{ new QRCode($("#qrMenti"),{text:mentiHref,width:512,height:512,colorDark:"#0B3352",colorLight:"#ffffff"}); }catch(e){}
 let i = 0;
 
 // precarga

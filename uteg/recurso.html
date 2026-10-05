@@ -205,7 +205,7 @@ footer{text-align:center;color:var(--gris);font-size:.82rem;padding:1.5rem;borde
     </div>
     <div class="tarjeta" style="margin-top:1rem">
       <div style="position:relative;padding-bottom:56.25%;padding-top:35px;height:0;overflow:hidden;border-radius:12px">
-        <iframe title="Presentación de Mentimeter" sandbox="allow-popups allow-scripts allow-same-origin allow-presentation" allowfullscreen src="https://www.mentimeter.com/app/presentation/als8ocmtpug4w11dn12wr5domipagzg9/embed" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe>
+        <iframe id="mentiEmbed" title="Presentación de Mentimeter" sandbox="allow-popups allow-scripts allow-same-origin allow-presentation" allowfullscreen src="https://www.mentimeter.com/app/presentation/als8ocmtpug4w11dn12wr5domipagzg9/embed" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe>
       </div>
     </div>
   </section>
@@ -391,6 +391,7 @@ $("#btnMenti").href=mentiHref;
 const tabs=[...document.querySelectorAll('[role="tab"]')];
 function activar(t){ tabs.forEach(x=>{ const on=x===t; x.setAttribute("aria-selected",on); x.tabIndex=on?0:-1; document.getElementById(x.getAttribute("aria-controls")).hidden=!on; }); if(t.id!=="t-explorar") detenerTour(); }
 tabs.forEach((t,k)=>{ t.onclick=()=>activar(t); t.onkeydown=e=>{ if(e.key==="ArrowRight"||e.key==="ArrowLeft"){ const n=tabs[(k+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length]; n.focus(); activar(n);} }; });
+setInterval(()=>{ const f=$("#mentiEmbed"); if(!document.hidden && !$("#p-menti").hidden) f.src=f.src; },15000);
 if(location.hash==="#reto") activar($("#t-reto")); if(location.hash==="#evaluacion") activar($("#t-menti"));
 
 /* ---------- Accesibilidad general ---------- */

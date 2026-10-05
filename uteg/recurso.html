@@ -11,7 +11,7 @@
 <script>
   /* ============ CONFIGURACIÓN ============
      Enlace de votación de Mentimeter (ej. https://www.menti.com/al1b2c3d4e). Vacío = https://www.menti.com */
-  const MENTI_URL = "https://www.menti.com/aljx6iu2aqjx";
+  const MENTI_URL = "https://www.mentimeter.com/app/presentation/als8ocmtpug4w11dn12wr5domipagzg9/present?question=eqqto2qtg7eu";
 </script>
 <style>
 :root{
@@ -195,13 +195,18 @@ footer{text-align:center;color:var(--gris);font-size:.82rem;padding:1.5rem;borde
         <p class="grande">menti.com</p>
         <ol>
           <li>Abre <strong>menti.com</strong> en tu celular o escanea el código QR.</li>
-          <li>Escribe el código de 8 dígitos que aparece en la pantalla compartida por el docente.</li>
+          <li>Escribe el código que ves arriba de la pregunta.</li>
           <li>Primero: nube de palabras (1 minuto). Luego: quiz de 3 preguntas (20 segundos cada una).</li>
         </ol>
         <p style="color:var(--gris)">Tus respuestas son anónimas. ¿Sin celular? Responde en el chat de Zoom con la letra de tu opción.</p>
         <a class="btn prim" id="btnMenti" href="https://www.menti.com" target="_blank" rel="noopener">Abrir Mentimeter</a>
       </div>
       <div class="qr" id="qr"><img src="qr.png" width="220" height="220" alt="Código QR para entrar a Mentimeter"></div>
+    </div>
+    <div class="tarjeta" style="margin-top:1rem">
+      <div style="position:relative;padding-bottom:56.25%;padding-top:35px;height:0;overflow:hidden;border-radius:12px">
+        <iframe title="Presentación de Mentimeter" sandbox="allow-popups allow-scripts allow-same-origin allow-presentation" allowfullscreen src="https://www.mentimeter.com/app/presentation/als8ocmtpug4w11dn12wr5domipagzg9/embed" style="position:absolute;top:0;left:0;width:100%;height:100%;border:0"></iframe>
+      </div>
     </div>
   </section>
 </main>
